@@ -10,5 +10,8 @@ public class Printer {
         if(o.getClass().isArray()){
             System.out.println(Arrays.toString((int[]) o));
         }
+        if(o.getClass() == TreeNode.class){
+            BTreePrinter.printNode((TreeNode) o);
+        }
     }
 }

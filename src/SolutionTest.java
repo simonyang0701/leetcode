@@ -1,16 +1,21 @@
-import lib.Checker;
-import lib.ListNode;
+import lib.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Objects;
 
-import lib.Printer;
 import lib.ListNode;
 
 
 class SolutionTest{
     Solution solution = new Solution();
+    @Test
+    void maxDepth(){
+        TreeNode root = new TreeNode(new Integer[]{3,9,20,null,null,15,7});
+        print(root);
+        int res = solution.maxDepth(root);
+        check(res, 3);
+    }
     @Test
     void twoSum(){
         int[] res = solution.twoSum(new int[]{2,7,11,15}, 9);

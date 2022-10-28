@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 import lib.ListNode;
+import lib.TreeNode;
 
 public class Solution {
     // No. 1
@@ -34,6 +35,12 @@ public class Solution {
                 l2 = l2.next;
         }
         return dummyHead.next;
+    }
+
+    // No. 104
+    public int maxDepth(TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
     }
 
 }
