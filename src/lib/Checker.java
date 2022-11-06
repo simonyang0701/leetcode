@@ -21,13 +21,21 @@ public class Checker {
             assert  ListNode.check((ListNode) o1, (ListNode) o2);
         }
         else if(o1.getClass() == ArrayList.class){
+            if (((ArrayList<?>) o1).size() == 0 && ((ArrayList<?>) o2).size() == 0){
+                assert true;
+                return;
+            }
             Iterator iter = ((ArrayList<?>) o1).iterator();
             Iterator iter2 = ((ArrayList<?>) o2).iterator();
             while (iter.hasNext()){
                 assert iter.next().equals(iter2.next());
             }
             assert ((ArrayList<?>) o1).iterator().next().equals(((ArrayList<?>) o2).iterator().next());
-        } else{
+        }
+        else if(o1.getClass() == TreeNode.class){
+            assert TreeNode.isSameTree((TreeNode) o1, (TreeNode) o2);
+        }
+        else{
             assert o1.equals(o2);
         }
     }

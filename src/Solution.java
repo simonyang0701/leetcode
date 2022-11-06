@@ -260,6 +260,34 @@ public class Solution {
         return new int[] {-1, -1};
     }
 
+    // No. 45
+    public int jump(int[] nums) {
+        int farest = 0, currentJumEnd = 0, res = 0;
+        for (int i = 0; i < nums.length - 1; i++){
+            farest = Math.max(farest, i + nums[i]);
+            if (i == currentJumEnd){
+                res ++;
+                currentJumEnd = farest;
+            }
+        }
+        return res;
+    }
+
+    // No. 53
+    public int maxSubArray(int[] nums) {
+        int globalMax = Integer.MIN_VALUE;
+        int localMax = 0;
+        for (int i = 0; i<nums.length; i++){
+            if (localMax < 0){
+                localMax = nums[i];
+            }else{
+                localMax = localMax + nums[i];
+            }
+            globalMax = Math.max(globalMax, localMax);
+        }
+        return globalMax;
+    }
+
     // No. 56
     public int[][] merge(int[][] intervals) {
         /*
@@ -299,6 +327,18 @@ public class Solution {
             dfsSubsets(nums, i+1, path, result);
             path.remove(path.size() - 1);
         }
+    }
+
+    // No. 98
+    public boolean isValidBST(TreeNode root) {
+        return dfsisValidBST(root, null, null);
+    }
+    private boolean dfsisValidBST(TreeNode root, Integer low, Integer high){
+        if (root == null) return true;
+        if ((low != null && root.val <= low) || (high != null && root.val >= high)) return false;
+        boolean left = dfsisValidBST(root.left, low, root.val);
+        boolean right = dfsisValidBST(root.right, root.val, high);
+        return left & right;
     }
 
     // No. 102
@@ -375,6 +415,37 @@ public class Solution {
             ret.add(item);
         }
         return ret;
+    }
+
+    // No. 100
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if(p == null && q == null) return true;
+        if(p == null || q == null) return false;
+        if(p.val == q.val){
+            boolean left = isSameTree(p.left, q.left);
+            boolean right = isSameTree(p.right, q.right);
+            return (left & right);
+        }
+        return false;
+    }
+
+    // No. 113
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) return res;
+        dfspathSum(root, targetSum, res, new ArrayList<>(), 0);
+        return res;
+    }
+    private void dfspathSum(TreeNode root, int targetSum, List<List<Integer>> res, List<Integer> path, int sum){
+        if (root == null) return;
+        path.add(root.val);
+        sum += root.val;
+        if (sum == targetSum && root.left == null && root.right == null){
+            res.add(new ArrayList<>(path));
+        }
+        dfspathSum(root.left, targetSum, res, path, sum);
+        dfspathSum(root.right, targetSum, res, path, sum);
+        path.remove(path.size() - 1);
     }
 
     // No. 139
@@ -460,6 +531,22 @@ public class Solution {
         return slow;
     }
 
+    // No. 156
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if (root == null || root.left == null && root.right == null)
+            return root;
+
+        TreeNode newRoot = upsideDownBinaryTree(root.left);
+
+        root.left.left = root.right;
+        root.left.right = root;
+
+        root.left = null;
+        root.right = null;
+
+        return newRoot;
+    }
+
     // No. 199
     public List<Integer> rightSideView(TreeNode root) {
         if(root == null) return new ArrayList<>();
@@ -482,6 +569,28 @@ public class Solution {
             }
         }
         return rightside;
+    }
+
+    // No. 254
+    public List<List<Integer>> getFactors(int n) {
+        List<List<Integer>> res = new ArrayList<>();
+        dfsgetFactors(n, res, new ArrayList<>(), 2);
+        return res;
+    }
+    public void dfsgetFactors(int n, List<List<Integer>> res, List<Integer> items, int start){
+        if (n <= 1){
+            if (items.size() > 1){
+                res.add(new ArrayList<>(items));
+            }
+            return;
+        }
+        for (int i = start; i <= n; i++){
+            if (n % i == 0){
+                items.add(i);
+                dfsgetFactors(n/i, res, items, i);
+                items.remove(items.size() - 1);
+            }
+        }
     }
 
     // No. 261
@@ -605,6 +714,84 @@ public class Solution {
         return cache[i][j];
     }
 
+    // No. 395
+    public int longestSubstring(String s, int k) {
+        return DClongestSubstring(s, 0, s.length(), k);
+    }
+
+    private int DClongestSubstring(String s, int start, int end, int k) {
+        if (end < k) return 0;
+        int[] countMap = new int[26];
+        for (int i = start; i < end; i++)
+            countMap[s.charAt(i) - 'a']++;
+        for (int mid = start; mid < end; mid++) {
+            if (countMap[s.charAt(mid) - 'a'] >= k) continue;
+            int midNext = mid + 1;
+            while (midNext < end && countMap[s.charAt(midNext) - 'a'] < k) midNext++;
+            return Math.max(DClongestSubstring(s, start, mid, k),
+                    DClongestSubstring(s, midNext, end, k));
+        }
+        return (end - start);
+    }
+
+    // No. 468
+    public String validIPAddress(String queryIP) {
+        if(queryIP.chars().filter(ch -> ch == '.').count() == 3){
+            return validIPv4(queryIP);
+        }
+        if(queryIP.chars().filter(ch -> ch == ':').count() == 7){
+            return validIPv6(queryIP);
+        }
+        return "Neither";
+    }
+    private String validIPv4(String IP){
+        String[] nums = IP.split("\\.", -1);
+        for(String x: nums){
+            for(char ch: x.toCharArray()){
+                if(!Character.isDigit(ch)) return "Neither";
+            }
+            if (x.length() == 0 || x.length() > 3){
+                return "Neither";
+            }
+            if(x.charAt(0) == '0' && x.length() > 1) return "Neither";
+            if(Integer.parseInt(x) > 255) return "Neither";
+        }
+        return "IPv4";
+    }
+    private String validIPv6(String IP){
+        String[] nums = IP.split("\\:", -1);
+        String hexdigits = "0123456789abcdefABCDEF";
+        for(String x: nums){
+            if(x.length() == 0 || x.length() > 4) return "Neither";
+            for(char ch: x.toCharArray()){
+                if(hexdigits.indexOf(ch) == -1) return "Neither";
+            }
+        }
+        return "IPv6";
+    }
+
+    // No. 670
+    public int maximumSwap(int num) {
+        char[] digits = Integer.toString(num).toCharArray();
+        int[] buckets = new int[10];
+        for(int i = 0; i < digits.length; i++){
+            buckets[digits[i] - '0'] = i;
+        }
+        for(int i = 0; i < digits.length; i++){
+            for (int k = 9; k > digits[i] - '0'; k --){
+                if (buckets[k] > i){
+                    // Swap
+                    char tmp = digits[i];
+                    digits[i] = digits[buckets[k]];
+                    digits[buckets[k]] = tmp;
+
+                    return Integer.valueOf(new String(digits));
+                }
+            }
+        }
+        return num;
+    }
+
     // No. 773
     private int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     public int slidingPuzzle(int[][] board) {
@@ -726,6 +913,22 @@ public class Solution {
 
             return "";
         }
+    }
+
+    // No. 1143
+    public int longestCommonSubsequence(String text1, String text2) {
+        if(text1.length() == 0 || text2.length() == 0) return 0;
+        int dp[][] = new int[text1.length() + 1][text2.length() + 1];
+        for (int i = 1; i < text1.length() + 1;i++){
+            for (int j = 1; j < text2.length() + 1; j++){
+                if(text1.charAt(i-1) == text2.charAt(j-1)){
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                }else{
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        return dp[text1.length()][text2.length()];
     }
 
     // No. 2290

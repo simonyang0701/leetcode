@@ -9,8 +9,71 @@ import lib.ListNode;
 class SolutionTest{
     Solution solution = new Solution();
     @Test
+    void longestCommonSubsequence(){
+        int res = solution.longestCommonSubsequence("abcde", "ace");
+        print(res);
+        check(res, 3);
+    }
+    @Test
+    void validIPAddress(){
+        String res = solution.validIPAddress("172.16.254.1");
+        print(res);
+        check(res, "IPv4");
+    }
+    @Test
+    void longestSubstring(){
+        int res = solution.longestSubstring("aaabb", 3);
+        print(res);
+        check(res, 3);
+    }
+    @Test
+    void getFactors(){
+        List<List<Integer>> res = solution.getFactors(1);
+        print(res);
+        check(res, new ArrayList<>());
+    }
+    @Test
+    void maxSubArray(){
+        int res = solution.maxSubArray(new int[] {-2, 1, -3, 4, -1, 2, 1, -5, 4});
+        print(res);
+        check(res, 6);
+    }
+    @Test
+    void jump(){
+        int res = solution.jump(new int[]{2,3,1,1,4});
+        print(res);
+        check(res, 2);
+    }
+    @Test
+    void maximumSwap(){
+        int res = solution.maximumSwap(2736);
+        print(res);
+        check(res, 7236);
+    }
+    @Test
+    void upsideDownBinaryTree(){
+        TreeNode res = solution.upsideDownBinaryTree(new TreeNode(new Integer[]{1,2,3,4,5}));
+        print(res);
+        check(res, new TreeNode(new Integer[]{4,5,2,null,null,3,1}));
+    }
+    @Test
+    void pathSum(){
+        List<List<Integer>> res = solution.pathSum(new TreeNode(new Integer[]{5,4,8,11,null,13,4,7,2,null,null,5,1}), 22);
+        print(res);
+        List<List<Integer>> resCompare = new ArrayList<>();
+        resCompare.add(Arrays.asList(5,4,11,2));
+        resCompare.add(Arrays.asList(5,8,4,5));
+        check(res, resCompare);
+    }
+    @Test
+    void isValidBST(){
+        Boolean res = solution.isValidBST(new TreeNode(new Integer[]{2, 1, 3}));
+        print(res);
+        check(res, true);
+    }
+    @Test
     void verticalOrder(){
-        List<List<Integer>> res = solution.verticalOrder((new TreeNode(new Integer[]{3,9,8,4,0,1,7})));
+        List<List<Integer>> res = solution.verticalOrder(new TreeNode(new Integer[]{3,9,8,4,0,1,7}));
         print(res);
         List<List<Integer>> resCompare = new ArrayList<>();
         resCompare.add(Arrays.asList(4));
@@ -223,7 +286,6 @@ class SolutionTest{
         int res = solution.lengthOfLongestSubstring("abcabcbb");
         print(res);
         check(res, 3);
-
     }
     @Test
     void maxDepth(){
