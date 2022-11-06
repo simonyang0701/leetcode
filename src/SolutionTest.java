@@ -1,16 +1,93 @@
 import lib.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import lib.ListNode;
 
 
 class SolutionTest{
     Solution solution = new Solution();
+    @Test
+    void levelOrder(){
+        List<List<Integer>> res = solution.levelOrder((new TreeNode<>(new Integer[]{3,9,20,null,null,15,7})));
+        print(res);
+        List<List<Integer>> resCompare = new ArrayList<>();
+        resCompare.add(Arrays.asList(3));
+        resCompare.add(Arrays.asList(9, 20));
+        resCompare.add(Arrays.asList(15, 7));
+        check(res, resCompare);
+    }
+    void sortList(){
+        ListNode res = solution.sortList(new ListNode(new int[]{4,2,1,3}));
+        print(res);
+        check(res, new ListNode(new int[]{1,2,3,4}));
+    }
+    @Test
+    void merge(){
+        int[][] res = solution.merge(new int[][]{
+                {1,3},{2,6},{8,10},{15,18}
+        });
+        print(res);
+        check(res, new int[][]{{1,6},{8,10},{15,18}});
+    }
+    @Test
+    void longestIncreasingPath(){
+        int res = solution.longestIncreasingPath(new int[][]{{3,4,5},{3,2,6},{2,2,1}});
+        print(res);
+        check(res, 4);
+    }
+    @Test
+    void subarraysWithKDistinct(){
+        int res = solution.subarraysWithKDistinct(new int[]{1,2,1,2,3}, 2);
+        print(res);
+        check(res, 7);
+    }
+    @Test
+    void letterCombinations(){
+        List<String> res = solution.letterCombinations("23");
+        print(res);
+        check(res, new LinkedList<>(Arrays.asList("ad","ae","af","bd","be","bf","cd","ce","cf")));
+    }
+    @Test
+    void threeSumClosest(){
+        int res = solution.threeSumClosest(new int[]{-1, 2, 1, -4}, 1);
+        print(res);
+        check(res, 2);
+    }
+    @Test
+    void threeSum(){
+        List<List<Integer>> res = solution.threeSum(new int[]{-1,0,1,2,-1,-4});
+        print(res);
+        List<List<Integer>> resCompare = new ArrayList<>();
+        resCompare.add(Arrays.asList(-1, -1, 2));
+        resCompare.add(Arrays.asList(-1, 0, 1));
+        check(res, resCompare);
+    }
+    @Test
+    void intToRoman(){
+        String res = solution.intToRoman(3);
+        print(res);
+        check(res, "III");
+    }
+    @Test
+    void maxArea(){
+        int res = solution.maxArea(new int[]{1,8,6,2,5,4,8,3,7});
+        print(res);
+        check(res, 49);
+    }
+    @Test
+    void myAtoi(){
+        int res = solution.myAtoi("42");
+        print(res);
+        check(res, 42);
+    }
+    @Test
+    void slidingPuzzle(){
+        int res = solution.slidingPuzzle(new int[][]{{1,2,3},{4,0,5}});
+        print(res);
+        check(res, 1);
+    }
     @Test
     void rightSideView(){
         List<Integer> res = solution.rightSideView(new TreeNode<>(new Integer[]{1,2,3,null,5,null,4}));

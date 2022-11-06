@@ -118,6 +118,128 @@ public class Solution {
 
     }
 
+    // No. 8
+    public int myAtoi(String s) {
+        if (s == null || s.length() == 0) return 0;
+        s = s.trim();
+        char firstChar = s.charAt(0);
+        int sign = 1, start = 0, len = s.length();
+        long sum = 0;
+        if(firstChar == '+'){
+            sign = 1;
+            start ++;
+        } else if (firstChar == '-'){
+            sign = -1;
+            start ++;
+        }
+        for (int i = start; i < len; i++){
+            if (!Character.isDigit(s.charAt(i)))
+                return (int) sum * sign;
+            sum = sum * 10 + s.charAt(i) - '0';
+            if (sign == 1 && sum > Integer.MAX_VALUE)
+                return Integer.MAX_VALUE;
+            if (sign == -1 && sum < Integer.MIN_VALUE)
+                return Integer.MIN_VALUE;
+        }
+
+        return (int) sum * sign;
+    }
+
+    // No. 11
+    public int maxArea(int[] height) {
+        int left = 0, right = height.length - 1, maxarea = 0;
+        while(left < right){
+            int width = right - left;
+            maxarea = Math.max(maxarea, Math.min(height[left], height[right]) * width);
+            if (height[left] <= height[right]){
+                left ++;
+            }else{
+                right --;
+            }
+        }
+        return maxarea;
+    }
+
+    // No. 12
+    private static final int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    private static final String[] symbols = {"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+
+    public String intToRoman(int num) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < values.length && num > 0; i++) {
+            while (values[i] <= num) {
+                num -= values[i];
+                sb.append(symbols[i]);
+            }
+        }
+        return sb.toString();
+    }
+
+    // No. 15
+    public List<List<Integer>> threeSum(int[] nums) {
+        Set<List<Integer>> res = new HashSet<>();
+        if (nums.length == 0) return new ArrayList<>(res);
+        Arrays.sort(nums);
+        for (int i = 0; i<nums.length - 2; i++){
+            int j = i + 1;
+            int k = nums.length - 1;
+            while(j < k){
+                int sum = nums[i] + nums[j] + nums[k];
+                if (sum == 0){
+                    res.add(Arrays.asList(nums[i], nums[j], nums[k]));
+                    j++;
+                    k--;
+                }
+                else if (sum > 0) k --;
+                else if (sum < 0) j ++;
+            }
+        }
+
+        return new ArrayList<>(res);
+    }
+
+    // No. 16
+    public int threeSumClosest(int[] nums, int target) {
+        int diff = Integer.MAX_VALUE;
+        int n = nums.length;
+        Arrays.sort(nums);
+        for (int i = 0; i < n && diff != 0; ++i) {
+            int lo = i + 1;
+            int hi = n - 1;
+            while (lo < hi) {
+                int sum = nums[i] + nums[lo] + nums[hi];
+                if (Math.abs(target - sum) < Math.abs(diff)) {
+                    diff = target - sum;
+                }
+                if (sum < target) {
+                    ++lo;
+                } else {
+                    --hi;
+                }
+            }
+        }
+        return target - diff;
+    }
+
+    // No. 17
+    public List<String> letterCombinations(String digits) {
+        LinkedList<String> ans = new LinkedList<>();
+        if(digits.isEmpty()) return ans;
+        String[] mapping = new String[] {"0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        ans.add("");
+        for (int i = 0; i < digits.length(); i++){
+            int x = Character.getNumericValue(digits.charAt(i));
+            while(ans.peek().length() == i){
+                String t = ans.remove();
+                for (char s : mapping[x].toCharArray()){
+                    ans.add(t+s);
+                }
+            }
+        }
+        return ans;
+    }
+
+
     // No. 34
     public int[] searchRange(int[] nums, int target) {
         int lo = 0, hi = nums.length - 1;
@@ -138,6 +260,30 @@ public class Solution {
         return new int[] {-1, -1};
     }
 
+    // No. 56
+    public int[][] merge(int[][] intervals) {
+        /*
+        Time complexity: O(nlogN)
+        Space complexity: O(logN)
+         */
+        if (intervals.length <= 1) return intervals;
+        Arrays.sort(intervals, (i1, i2) -> Integer.compare(i1[0], i2[0]));
+
+        List<int[]> result = new ArrayList<>();
+        int[] newInterval = intervals[0];
+        result.add(newInterval);
+        for (int[] interval: intervals){
+            if (interval[0] < newInterval[1]){
+                newInterval[1] = Math.max(newInterval[1], interval[1]);
+            }else{
+                newInterval = interval;
+                result.add(newInterval);
+            }
+        }
+
+        return result.toArray(new int[result.size()][]);
+    }
+
     // No. 78
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
@@ -153,6 +299,26 @@ public class Solution {
             dfsSubsets(nums, i+1, path, result);
             path.remove(path.size() - 1);
         }
+    }
+
+    // No. 102
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null) return res;
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.offer(root);
+        while(!q.isEmpty()){
+            int size = q.size();
+            List<Integer> level = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode cur = q.poll();
+                level.add((Integer) cur.val);
+                if(cur.left != null) q.offer(cur.left);
+                if(cur.right != null) q.offer(cur.right);
+            }
+            res.add(level);
+        }
+        return res;
     }
 
     // No. 104
@@ -201,6 +367,47 @@ public class Solution {
             map.remove(key);
             map.put(key, value);
         }
+    }
+
+    // No. 148
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head;
+
+        ListNode mid = getMid(head);
+        ListNode l1, l2;
+        l1 = head;
+        l2 = mid.next;
+        mid.next = null;
+        l1 = sortList(l1);
+        l2 = sortList(l2);
+        return merge(l1, l2);
+
+    }
+    ListNode merge(ListNode l1, ListNode l2){
+        ListNode dummy = new ListNode();
+        ListNode tail = dummy;
+        while(l1 != null && l2 != null){
+            if (l1.val <= l2.val){
+                tail.next = l1;
+                l1 = l1.next;
+            }else{
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        tail.next = (l1 != null) ? l1: l2;
+        return dummy.next;
+    }
+    ListNode getMid(ListNode head){
+        if (head == null) return head;
+        ListNode slow = head, fast = head;
+        while(fast.next != null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
     }
 
     // No. 199
@@ -288,6 +495,120 @@ public class Solution {
             }
         }
         return ret;
+    }
+
+    // No. 329
+    int[] dx = {0, 0, 1, -1};
+    int[] dy = {1, -1, 0, 0};
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) return 0;
+        int[][] cache = new int[matrix.length][matrix[0].length];
+        int res = 0;
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                res = Math.max(res, dplongestIncreasingPath(matrix, i, j, cache));
+            }
+        }
+        return res;
+    }
+    private int dplongestIncreasingPath(int[][] matrix, int i, int j, int[][] cache){
+        if(cache[i][j] > 0) return cache[i][j];
+        cache[i][j] = 1;
+        for (int k = 0; k < 4; k ++){
+            int x = i + dx[k], y = j + dy[k];
+            if (x >= 0 && x < matrix.length && y >= 0 && y < matrix[0].length && matrix[i][j] < matrix[x][y]){
+                cache[i][j] = Math.max(cache[i][j], 1 + dplongestIncreasingPath(matrix, x, y, cache));
+            }
+        }
+        return cache[i][j];
+    }
+
+    // No. 773
+    private int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public int slidingPuzzle(int[][] board) {
+        int step = 0, m = 2, n = 3;
+        HashSet<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+        int state = getState(board);
+        queue.add(state);
+        visited.add(state);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                state = queue.poll();
+                if (state == 123450) return step;
+                int pos = findZero(state);
+                for (int[] d : dirs) {
+                    int nr = pos / 3 + d[0];
+                    int nc = pos % 3 + d[1];
+                    if (nr < 0 || nr >= m || nc < 0 || nc >= n) continue;
+                    int newState = move(state, pos, nr * 3 + nc);
+                    if (visited.contains(newState)) continue;
+                    queue.add(newState);
+                    visited.add(newState);
+                }
+            }
+            step++;
+        }
+
+        return -1;
+    }
+    private int getState(int[][] board) {
+        int res = 0;
+        for (int i = 0; i < 6; i++) {
+            res = res * 10 + board[i / 3][i % 3];
+        }
+        return res;
+    }
+    private int findZero(int state) {
+        for (int i = 0; i < 6; i++) {
+            if (state % 10 == 0) {
+                return 5 - i;
+            }
+            state /= 10;
+        }
+        return 0;
+    }
+    private int move(int state, int pos, int newPos) {
+        int a = 0, s = state;
+        for (int i = 0; i < 6; i++) {
+            if (5 - i == newPos) a = s % 10;
+            s /= 10;
+        }
+        int res = 0, base = 1;
+        for (int i = 0; i < 6; i++) {
+            if (5 - i == pos) res += a * base;
+            else if (5 - i == newPos) ;
+            else res += state % 10 * base;
+            state /= 10;
+            base *= 10;
+        }
+        return res;
+    }
+
+    // No. 992
+    public int subarraysWithKDistinct(int[] nums, int k) {
+        /*
+        Time complexity: O(n)
+        Space complexity: O(n)
+         */
+        int res = 0, prefix = 0;
+        int [] m = new int[nums.length + 1];
+        for (int i = 0, j = 0, cnt = 0; i < nums.length; i++){
+            if (m[nums[i]] ++ == 0) ++ cnt;
+            if (cnt > k){
+                --m[nums[j++]];
+                --cnt;
+                prefix = 0;
+            }
+            while(m[nums[j]] > 1){
+                ++ prefix;
+                --m[nums[j++]];
+            }
+            if (cnt == k) res += prefix + 1;
+        }
+        return res;
     }
 
     // No. 981
