@@ -5,6 +5,8 @@ import java.util.*;
 public class Checker {
     public static void check(Object o1, Object o2){
         if(o1.getClass() != o2.getClass()){
+            System.out.println(o1.getClass());
+            System.out.println(o2.getClass());
             System.out.println("Datatype is mismatch!");
             assert false;
         }

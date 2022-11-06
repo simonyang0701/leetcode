@@ -8,13 +8,13 @@ import java.util.List;
 
 public class BTreePrinter {
 
-    public static <T extends Comparable<?>> void printNode(TreeNode<T> root) {
+    public static <T extends Comparable<?>> void printNode(TreeNode root) {
         int maxLevel = BTreePrinter.maxLevel(root);
 
         printNodeInternal(Collections.singletonList(root), 1, maxLevel);
     }
 
-    private static <T extends Comparable<?>> void printNodeInternal(List<TreeNode<T>> nodes, int level, int maxLevel) {
+    private static <T extends Comparable<?>> void printNodeInternal(List<TreeNode> nodes, int level, int maxLevel) {
         if (nodes.isEmpty() || BTreePrinter.isAllElementsNull(nodes))
             return;
 
@@ -25,9 +25,9 @@ public class BTreePrinter {
 
         BTreePrinter.printWhitespaces(firstSpaces);
 
-        List<TreeNode<T>> newNodes = new ArrayList<TreeNode<T>>();
-        for (TreeNode<T> node : nodes) {
-            if (node != null && node.val != null) {
+        List<TreeNode> newNodes = new ArrayList<TreeNode>();
+        for (TreeNode node : nodes) {
+            if (node != null) {
                 System.out.print(node.val);
                 newNodes.add(node.left);
                 newNodes.add(node.right);
@@ -49,14 +49,14 @@ public class BTreePrinter {
                     continue;
                 }
 
-                if ((nodes.get(j).left != null) && (nodes.get(j).left.val != null))
+                if (nodes.get(j).left != null)
                     System.out.print("/");
                 else
                     BTreePrinter.printWhitespaces(1);
 
                 BTreePrinter.printWhitespaces(i + i - 1);
 
-                if ((nodes.get(j).right != null) && (nodes.get(j).right.val != null))
+                if (nodes.get(j).right != null)
                     System.out.print("\\");
                 else
                     BTreePrinter.printWhitespaces(1);
@@ -75,7 +75,7 @@ public class BTreePrinter {
             System.out.print(" ");
     }
 
-    private static <T extends Comparable<?>> int maxLevel(TreeNode<T> node) {
+    private static <T extends Comparable<?>> int maxLevel(TreeNode node) {
         if (node == null)
             return 0;
 

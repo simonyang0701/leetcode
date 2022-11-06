@@ -9,8 +9,40 @@ import lib.ListNode;
 class SolutionTest{
     Solution solution = new Solution();
     @Test
+    void verticalOrder(){
+        List<List<Integer>> res = solution.verticalOrder((new TreeNode(new Integer[]{3,9,8,4,0,1,7})));
+        print(res);
+        List<List<Integer>> resCompare = new ArrayList<>();
+        resCompare.add(Arrays.asList(4));
+        resCompare.add(Arrays.asList(9));
+        resCompare.add(Arrays.asList(3, 0, 1));
+        resCompare.add(Arrays.asList(8));
+        resCompare.add(Arrays.asList(7));
+        check(res, resCompare);
+    }
+    @Test
+    void levelOrderBottom(){
+        List<List<Integer>> res = solution.levelOrderBottom((new TreeNode(new Integer[]{3,9,20,null,null,15,7})));
+        print(res);
+        List<List<Integer>> resCompare = new ArrayList<>();
+        resCompare.add(Arrays.asList(15, 7));
+        resCompare.add(Arrays.asList(9, 20));
+        resCompare.add(Arrays.asList(3));
+        check(res, resCompare);
+    }
+    @Test
+    void zigzagLevelOrder(){
+        List<List<Integer>> res = solution.zigzagLevelOrder((new TreeNode(new Integer[]{3,9,20,null,null,15,7})));
+        print(res);
+        List<List<Integer>> resCompare = new ArrayList<>();
+        resCompare.add(Arrays.asList(3));
+        resCompare.add(Arrays.asList(20, 9));
+        resCompare.add(Arrays.asList(15, 7));
+        check(res, resCompare);
+    }
+    @Test
     void levelOrder(){
-        List<List<Integer>> res = solution.levelOrder((new TreeNode<>(new Integer[]{3,9,20,null,null,15,7})));
+        List<List<Integer>> res = solution.levelOrder((new TreeNode(new Integer[]{3,9,20,null,null,15,7})));
         print(res);
         List<List<Integer>> resCompare = new ArrayList<>();
         resCompare.add(Arrays.asList(3));
@@ -90,7 +122,7 @@ class SolutionTest{
     }
     @Test
     void rightSideView(){
-        List<Integer> res = solution.rightSideView(new TreeNode<>(new Integer[]{1,2,3,null,5,null,4}));
+        List<Integer> res = solution.rightSideView(new TreeNode(new Integer[]{1,2,3,null,5,null,4}));
         print(res);
         check(res, new ArrayList<>(Arrays.asList(1,3,4)));
     }
@@ -197,8 +229,9 @@ class SolutionTest{
     void maxDepth(){
         TreeNode root = new TreeNode(new Integer[]{3,9,20,null,null,15,7});
         print(root);
-        int res = solution.maxDepth(root);
-        check(res, 3);
+//        int res = solution.maxDepth(root);
+//        print(res);
+//        check(res, 3);
     }
     @Test
     void twoSum(){

@@ -321,10 +321,60 @@ public class Solution {
         return res;
     }
 
+    // No. 103
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null) return res;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        Boolean even = true;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            LinkedList<Integer> path = new LinkedList<>();
+            for (int i = 0; i < size; i++){
+                TreeNode cur = queue.poll();
+                if (cur.left != null) queue.add(cur.left);
+                if (cur.right != null) queue.add(cur.right);
+                if (even){
+                    path.add((Integer) cur.val);
+                }else{
+                    path.addFirst((Integer) cur.val);
+                }
+            }
+            res.add(path);
+            even = !even;
+        }
+        return res;
+    }
+
     // No. 104
     public int maxDepth(TreeNode root) {
         if (root == null) return 0;
         return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
+
+    // No. 107
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        LinkedList<List<Integer>> res = new LinkedList<>();
+        if(root == null) return res;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            List<Integer> path = new ArrayList<>();
+            for (int i = 0; i < size; i++){
+                TreeNode cur = queue.poll();
+                path.add(cur.val);
+                if (cur.left != null) queue.offer(cur.left);
+                if (cur.right != null) queue.offer(cur.right);
+            }
+            res.addFirst(path);
+        }
+        List<List<Integer>> ret = new ArrayList<>();
+        for(List<Integer> item: res){
+            ret.add(item);
+        }
+        return ret;
     }
 
     // No. 139
@@ -495,6 +545,38 @@ public class Solution {
             }
         }
         return ret;
+    }
+
+    // No. 314
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) return res;
+        Queue<TreeNode> queue = new LinkedList<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Map<TreeNode, Integer> colMap = new HashMap<>();
+        queue.offer(root);
+        colMap.put(root, 0);
+        int min = 0, max = 0;
+        while(!queue.isEmpty()){
+            TreeNode cur = queue.poll();
+            int col = colMap.get(cur);
+            map.putIfAbsent(col, new ArrayList<>());
+            map.get(col).add((Integer)cur.val);
+            min = Math.min(min, col);
+            max = Math.max(max, col);
+            if (cur.left != null){
+                queue.offer(cur.left);
+                colMap.put(cur.left, col - 1);
+            }
+            if (cur.right != null){
+                queue.offer(cur.right);
+                colMap.put(cur.right, col + 1);
+            }
+        }
+        for (int i = min; i <= max; i++){
+            res.add(map.get(i));
+        }
+        return res;
     }
 
     // No. 329
