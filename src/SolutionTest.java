@@ -9,6 +9,31 @@ import lib.ListNode;
 class SolutionTest{
     Solution solution = new Solution();
     @Test
+    void permute(){
+        List<List<Integer>> res = solution.permute(new int[]{1,2,3});
+        print(res);
+        List<List<Integer>> resCompare = new ArrayList<>();
+        resCompare.add(Arrays.asList(1,2,3));
+        resCompare.add(Arrays.asList(1,3,2));
+        resCompare.add(Arrays.asList(2,1,3));
+        resCompare.add(Arrays.asList(2,3,1));
+        resCompare.add(Arrays.asList(3,1,2));
+        resCompare.add(Arrays.asList(3,2,1));
+        check(res, resCompare);
+    }
+    @Test
+    void subarraysWithMoreZerosThanOnes(){
+        int res = solution.subarraysWithMoreZerosThanOnes(new int[]{0,1,1,0,1});
+        print(res);
+        check(res, 9);
+    }
+    @Test
+    void sortArray(){
+        int[] res = solution.sortArray(new int[]{5,2,3,1});
+        print(res);
+        check(res, new int[]{1,2,3,5});
+    }
+    @Test
     void trap(){
         int res = solution.trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1});
         print(res);

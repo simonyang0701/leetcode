@@ -349,6 +349,27 @@ public class Solution {
         return res;
     }
 
+    // No. 46
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        dfspermute(nums, res, new ArrayList<>(), new boolean[nums.length]);
+        return res;
+    }
+    private void dfspermute(int[] nums, List<List<Integer>> res, List<Integer> path, boolean[] used){
+        if (path.size() == used.length){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++){
+            if(used[i]) continue;
+            path.add(nums[i]);
+            used[i] = true;
+            dfspermute(nums, res, path, used);
+            path.remove(path.size() - 1);
+            used[i] = false;
+        }
+    }
+
     // No. 53
     public int maxSubArray(int[] nums) {
         int globalMax = Integer.MIN_VALUE;
@@ -1123,6 +1144,59 @@ public class Solution {
         return res;
     }
 
+    // No. 912
+    public int[] sortArray(int[] nums) {
+        if (nums == null || nums.length <= 1) return nums;
+        quickSort(nums, 0, nums.length - 1);
+        return nums;
+    }
+    private void quickSort(int[] nums, int lo, int hi){
+        if(lo >= hi) return;
+        int mid = partition(nums, lo, hi);
+        quickSort(nums, lo, mid);
+        quickSort(nums, mid + 1, hi);
+    }
+    private int partition(int[] nums, int lhs, int rhs){
+        int pivot = nums[lhs];
+        while(lhs < rhs) {
+            while (lhs < rhs && nums[rhs] >= pivot) rhs--;
+            swap(nums, lhs, rhs);
+            while (lhs < rhs && nums[lhs] <= pivot) lhs++;
+            swap(nums, rhs, lhs);
+        }
+        nums[lhs] = pivot;
+        return lhs;
+    }
+    private void swap(int[] nums, int lhs, int rhs){
+        int temp = nums[lhs];
+        nums[lhs] = nums[rhs];
+        nums[rhs] = temp;
+    }
+    public void mergesort(int[] nums, int start, int end){
+        if(start < end){
+            int mid = (start + end) / 2;
+            mergesort(nums, start, mid);
+            mergesort(nums, mid+1, end);
+            merge(nums, start, mid, end);
+        }
+    }
+    private void merge(int[] nums, int start, int mid, int end){
+        int i= start,  j= mid+1, k=0;
+        int[] temp = new int[end-start+1];
+        while( i <= mid && j<= end)
+        {
+            if (nums[i] < nums[j])
+                temp[k++] = nums[i++];
+            else
+                temp[k++] = nums[j++];
+        }
+        while (i <= mid) { temp[k++] = nums[i++]; }
+        while (j <= end) { temp[k++] = nums[j++]; }
+        for (int pointer = start; pointer <= end; pointer++){
+            nums[pointer] = temp[pointer-start];
+        }
+    }
+
     // No. 992
     public int subarraysWithKDistinct(int[] nums, int k) {
         /*
@@ -1217,6 +1291,26 @@ public class Solution {
             }
         }
         return dp[text1.length()][text2.length()];
+    }
+
+    // No. 2031
+    public int subarraysWithMoreZerosThanOnes(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int res = 0, cnt = 0, prefixSum = 0;
+        for (int i = 0; i < nums.length; i++){
+            if (nums[i] == 1){
+                prefixSum++;
+                cnt+=map.getOrDefault(prefixSum-1, 0);
+            }else{
+                prefixSum--;
+                cnt-=map.getOrDefault(prefixSum, 0);
+            }
+            res += cnt;
+            map.put(prefixSum, map.getOrDefault(prefixSum, 0) + 1);
+            res %= 1000000007;
+        }
+        return res;
     }
 
     // No. 2290
