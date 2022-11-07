@@ -9,6 +9,107 @@ import lib.ListNode;
 class SolutionTest{
     Solution solution = new Solution();
     @Test
+    void trap(){
+        int res = solution.trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1});
+        print(res);
+        check(res, 6);
+    }
+    @Test
+    void swapPairs(){
+        ListNode res = solution.swapPairs(new ListNode(new int[]{1,2,3,4}));
+        print(res);
+        check(res, new ListNode(new int[]{2,1,4,3}));
+    }
+    @Test
+    void kthSmallest(){
+        int res = solution.kthSmallest(new TreeNode(new Integer[]{3,1,4,null,2}), 1);
+        print(res);
+        check(res, 1);
+    }
+    @Test
+    void leastInterval(){
+        int res = solution.leastInterval(new char[]{'A', 'A', 'A', 'B', 'B', 'B'}, 2);
+        print(res);
+        check(res, 8);
+    }
+    @Test
+    void exist(){
+        Boolean res = solution.exist(new char[][]{
+                {'A', 'B', 'C','E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}
+        }, "ABCCED");
+        print(res);
+        check(res, true);
+    }
+    @Test
+    void buildTree(){
+        TreeNode res = solution.buildTree(new int[]{3,9,20,15,7}, new int[]{9,3,15,20,7});
+        print(res);
+        check(res, new TreeNode(new Integer[]{3,9,20,null,null,15,7}));
+    }
+    @Test
+    void lowestCommonAncestor(){
+        TreeNode res = solution.lowestCommonAncestor(new TreeNode(new Integer[]{3,5,1,6,2,0,8,null,null,7,4}),
+                new TreeNode(5), new TreeNode(1));
+        print(res);
+        check(res, new TreeNode(new Integer[]{3,5,1,6,2,0,8,null,null,7,4}));
+    }
+    @Test
+    void insert(){
+        int[][] res = solution.insert(new int[][]{{1,3}, {6,9}}, new int[]{2,5});
+        print(res);
+        check(res, new int[][]{{1,5}, {6,9}});
+    }
+    @Test
+    void search(){
+        int res = solution.search(new int[]{-1,0,3,5,9,12}, 9);
+        print(res);
+        check(res, 4);
+    }
+    @Test
+    void isAnagram(){
+        Boolean res = solution.isAnagram("anagram", "nagaram");
+        print(res);
+        check(res, true);
+    }
+    @Test
+    void invertTree(){
+        TreeNode res = solution.invertTree(new TreeNode(new Integer[]{4,2,7,1,3,6,9}));
+        print(res);
+        check(res, new TreeNode(new Integer[]{4,7,2,9,6,3,1}));
+    }
+    @Test
+    void camelMatch(){
+        List<Boolean> res = solution.camelMatch(new String[]{
+                "FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"
+        }, "FB");
+        print(res);
+        check(res, new ArrayList<>(Arrays.asList(new Boolean[]{true,false,true,true,false})));
+    }
+    @Test
+    void isPalindrome(){
+        Boolean res = solution.isPalindrome("A man, a plan, a canal: Panama");
+        print(res);
+        check(res, true);
+    }
+    @Test
+    void maxProfit(){
+        int res = solution.maxProfit(new int[]{7, 1, 5,3,6,4});
+        print(res);
+        check(res, 5);
+    }
+    @Test
+    void mergeTwoLists(){
+        ListNode res = solution.mergeTwoLists(new ListNode(new int[]{1,2,4}), new ListNode(new int[]{1,3,4}));
+        print(res);
+        check(res, new ListNode(new int[]{1,1,2,3,4,4}));
+    }
+    @Test
+    void isValid(){
+        Boolean res = solution.isValid("()");
+        print(res);
+        check(res, true);
+    }
+    @Test
     void longestCommonSubsequence(){
         int res = solution.longestCommonSubsequence("abcde", "ace");
         print(res);

@@ -239,6 +239,58 @@ public class Solution {
         return ans;
     }
 
+    // No. 20
+    public boolean isValid(String s) {
+        HashMap<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put(']', '[');
+        map.put('}', '{');
+        Stack<Character> stack = new Stack<>();
+        for(int i = 0; i < s.length(); i++){
+            char c = s.charAt(i);
+            if(map.containsKey(c)){
+                if(stack.empty() || stack.pop() != map.get(c)) return false;
+            }
+            else{
+                stack.push(c);
+            }
+        }
+        return stack.empty();
+    }
+
+    // No. 21
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode();
+        ListNode head = dummy;
+        while(list1 != null && list2 != null){
+            if (list1.val < list2.val){
+                head.next = list1;
+                list1 = list1.next;
+            }else{
+                head.next = list2;
+                list2 = list2.next;
+            }
+            head = head.next;
+        }
+        head.next = list1 == null ? list2 : list1;
+        return dummy.next;
+    }
+
+    // No. 24
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        ListNode cur = dummy;
+        while(cur.next != null && cur.next.next != null){
+            ListNode first = cur.next;
+            ListNode second = cur.next.next;
+            first.next = second.next;
+            cur.next = second;
+            cur.next.next = first;
+            cur = cur.next.next;
+        }
+        return dummy.next;
+    }
 
     // No. 34
     public int[] searchRange(int[] nums, int target) {
@@ -258,6 +310,30 @@ public class Solution {
             }
         }
         return new int[] {-1, -1};
+    }
+
+    // No. 42
+    public int trap(int[] height) {
+        /*
+        Two pointers
+        Time complexity: O(N)
+        Space complexity: O(1)
+         */
+        if (height.length == 0) return 0;
+        int left = 0, right = height.length - 1;
+        int leftMax = 0, rightMax = 0, ans = 0;
+        while(left < right){
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            if (leftMax < rightMax){
+                ans += Math.max(0, leftMax - height[left]);
+                left ++;
+            }else{
+                ans+= Math.max(0, rightMax - height[right]);
+                right --;
+            }
+        }
+        return ans;
     }
 
     // No. 45
@@ -312,6 +388,30 @@ public class Solution {
         return result.toArray(new int[result.size()][]);
     }
 
+    // No. 57
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> res = new ArrayList<>();
+        for (int[] interval: intervals){
+            // No insert
+            if (newInterval == null || interval[1] < newInterval[0]){
+                res.add(interval);
+            }
+            // Insert newInterval
+            else if(interval[0] > newInterval[1]){
+                res.add(newInterval);
+                res.add(interval);
+                newInterval = null;
+            }
+            // Overlapping and merged
+            else{
+                newInterval[0] = Math.min(newInterval[0], interval[0]);
+                newInterval[1] = Math.max(newInterval[1], interval[1]);
+            }
+        }
+        if (newInterval != null) res.add(newInterval);
+        return res.toArray(new int[][]{});
+    }
+
     // No. 78
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> result = new ArrayList<>();
@@ -327,6 +427,31 @@ public class Solution {
             dfsSubsets(nums, i+1, path, result);
             path.remove(path.size() - 1);
         }
+    }
+
+    // No. 79
+    public boolean exist(char[][] board, String word) {
+        boolean[][] visited = new boolean[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++){
+            for (int j = 0; j < board[0].length; j++){
+                if (board[i][j] == word.charAt(0) && dfsexist(i, j, 0, board, word, visited)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private boolean dfsexist(int i, int j, int index, char[][] board, String word, boolean[][] visited){
+        if (index == word.length()) return true;
+        if(i >= board.length || i<0 || j<0 || j>= board[0].length || visited[i][j] || word.charAt(index) !=board[i][j]) return false;
+        visited[i][j] = true;
+        if(dfsexist(i+1, j, index + 1, board, word, visited) ||
+                dfsexist(i-1, j,index + 1, board, word, visited) ||
+                dfsexist(i, j+1, index + 1, board, word, visited) ||
+                dfsexist(i, j-1, index + 1, board, word, visited)) return true;
+        visited[i][j] = false;
+
+        return false;
     }
 
     // No. 98
@@ -429,6 +554,27 @@ public class Solution {
         return false;
     }
 
+    // No. 105
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if (preorder.length == 0 || inorder.length == 0 || preorder.length != inorder.length) return null;
+        return helperbuildTree(0, 0, inorder.length - 1, preorder, inorder);
+    }
+    public TreeNode helperbuildTree(int preStart, int inStart, int inEnd, int[] preorder, int[] inorder){
+        if (preStart > preorder.length - 1 || inStart > inEnd) {
+            return null;
+        }
+        TreeNode root = new TreeNode(preorder[preStart]);
+        int inIndex = 0; // Index of current root in inorder
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == root.val) {
+                inIndex = i;
+            }
+        }
+        root.left = helperbuildTree(preStart + 1, inStart, inIndex - 1, preorder, inorder);
+        root.right = helperbuildTree(preStart + inIndex - inStart + 1, inIndex + 1, inEnd, preorder, inorder);
+        return root;
+    }
+
     // No. 113
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
         List<List<Integer>> res = new ArrayList<>();
@@ -446,6 +592,36 @@ public class Solution {
         dfspathSum(root.left, targetSum, res, path, sum);
         dfspathSum(root.right, targetSum, res, path, sum);
         path.remove(path.size() - 1);
+    }
+
+    // No. 121
+    public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE, max = 0;
+        for (int i = 0; i < prices.length; i++){
+            minPrice = Math.min(minPrice, prices[i]);
+            max = Math.max(max, prices[i] - minPrice);
+        }
+        return max;
+    }
+
+    // No. 125
+    public boolean isPalindrome(String s) {
+        if (s.length() == 0) return true;
+        int head = 0, tail = s.length() - 1;
+        while(head < tail){
+            char chead = s.charAt(head);
+            char ctail = s.charAt(tail);
+            if (!Character.isLetterOrDigit(chead)){
+                head ++;
+            }else if(!Character.isLetterOrDigit(ctail)){
+                tail --;
+            } else {
+                if (Character.toLowerCase(chead) != Character.toLowerCase(ctail)) return false;
+                head ++;
+                tail --;
+            }
+        }
+        return true;
     }
 
     // No. 139
@@ -571,6 +747,20 @@ public class Solution {
         return rightside;
     }
 
+    // No. 236
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        int curVal = root.val;
+        int pVal = p.val;
+        int qVal = q.val;
+        if (pVal > curVal && qVal > curVal){
+            return lowestCommonAncestor(root.right, p, q);
+        }else if (pVal < curVal && qVal < curVal){
+            return lowestCommonAncestor(root.left, p, q);
+        }else{
+            return root;
+        }
+    }
+
     // No. 254
     public List<List<Integer>> getFactors(int n) {
         List<List<Integer>> res = new ArrayList<>();
@@ -636,6 +826,46 @@ public class Solution {
             }
         }
         return (ans != Integer.MAX_VALUE) ? ans: 0;
+    }
+
+    // No. 226
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null) return root;
+        TreeNode tmp = root.left;
+        root.left = invertTree(root.right);
+        root.right = invertTree(tmp);
+        return root;
+    }
+
+    // No. 230
+    public int kthSmallest(TreeNode root, int k) {
+        /*
+        Time complexity: O(N)
+        Space complexity: O(N)
+         */
+        ArrayList<Integer> buffer = new ArrayList();
+        inorderSearch(root, k, buffer);
+        return buffer.get(k - 1);
+    }
+    private void inorderSearch(TreeNode node, int k, ArrayList<Integer> buffer){
+        if (buffer.size() >= k) return;
+        if (node.left != null) inorderSearch(node.left, k, buffer);
+        buffer.add(node.val);
+        if (node.right != null) inorderSearch(node.right, k, buffer);
+    }
+
+    // No. 242
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+        int[] count = new int[26];
+        for (int i = 0; i < s.length(); i++){
+            count[s.charAt(i) - 'a'] ++;
+            count[t.charAt(i) - 'a'] --;
+        }
+        for (int i: count){
+            if (i != 0) return false;
+        }
+        return true;
     }
 
     // No. 311
@@ -770,6 +1000,26 @@ public class Solution {
         return "IPv6";
     }
 
+    // No. 621
+    public int leastInterval(char[] tasks, int n) {
+        /*
+        Time complexity: O(N)
+        Space complexity: O(1)
+         */
+        int[] count = new int[26];
+        for(char task: tasks){
+            count[task - 'A'] ++;
+        }
+        Arrays.sort(count);
+        int f_max = count[25];
+        int idle_time = (f_max - 1) * n;
+        for (int i = count.length - 2; i >= 0 && idle_time > 0; i--){
+            idle_time -= Math.min(f_max-1, count[i]);
+        }
+        idle_time = Math.max(0, idle_time);
+        return idle_time+tasks.length;
+    }
+
     // No. 670
     public int maximumSwap(int num) {
         char[] digits = Integer.toString(num).toCharArray();
@@ -790,6 +1040,23 @@ public class Solution {
             }
         }
         return num;
+    }
+
+    // No. 704
+    public int search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) return -1;
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target){
+                return mid;
+            }else if (nums[mid] < target){
+                left = mid +1;
+            }else{
+                right = mid - 1;
+            }
+        }
+        return -1;
     }
 
     // No. 773
@@ -913,6 +1180,27 @@ public class Solution {
 
             return "";
         }
+    }
+
+    // No. 1023
+    public List<Boolean> camelMatch(String[] queries, String pattern) {
+        List<Boolean> res = new ArrayList<>();
+        char[] patternArr = pattern.toCharArray();
+        for (String query: queries){
+            res.add(isCamelMatch(query.toCharArray(), patternArr));
+        }
+        return res;
+    }
+    private boolean isCamelMatch(char[] arr, char[] pattern){
+        int j = 0;
+        for (int i = 0; i < arr.length; i++){
+            if (j < pattern.length && arr[i] == pattern[j]){
+                j++;
+            }else if (arr[i] >= 'A' && arr[i] <= 'Z'){
+                return false;
+            }
+        }
+        return j == pattern.length;
     }
 
     // No. 1143
