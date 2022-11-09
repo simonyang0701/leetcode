@@ -9,6 +9,41 @@ import lib.ListNode;
 class SolutionTest{
     Solution solution = new Solution();
     @Test
+    void checkPossibility(){
+        Boolean res = solution.checkPossibility(new int[]{4,2,3});
+        print(res);
+        check(res, true);
+    }
+    @Test
+    void maxProbability(){
+        double res = solution.maxProbability(3, new int[][]{{0,1}, {1,2}, {0,2}}, new double[]{0.5, 0.5, 0.2}, 0, 2);
+        print(res);
+        check(res, 0.25000);
+    }
+    @Test
+    void MyCalendarTwo(){
+        Solution.MyCalendarTwo myCalendarTwo = new Solution.MyCalendarTwo();
+        print(myCalendarTwo.book(10, 20)); // return True, The event can be booked.
+        print(myCalendarTwo.book(50, 60)); // return True, The event can be booked.
+        print(myCalendarTwo.book(10, 40)); // return True, The event can be double booked.
+        print(myCalendarTwo.book(5, 15));  // return False, The event cannot be booked, because it would result in a triple booking.
+        print(myCalendarTwo.book(5, 10)); // return True, The event can be booked, as it does not use time 10 which is already double booked.
+        print(myCalendarTwo.book(25, 55)); // return True, The event can be booked, as the time in [25, 40) will be double booked with the third event, the time [40, 50) will be single booked, and the time [50, 55) will be double booked with the second event.
+    }
+    @Test
+    void MyCalendar(){
+        Solution.MyCalendar myCalendar = new Solution.MyCalendar();
+        print(myCalendar.book(10, 20)); // return True
+        print(myCalendar.book(15, 25)); // return False, It can not be booked because time 15 is already booked by another event.
+        print(myCalendar.book(20, 30)); // return True, The event can be booked, as the first event takes every time less than 20, but not including 20.
+    }
+    @Test
+    void getSumAbsoluteDifferences(){
+        int[] res = solution.getSumAbsoluteDifferences(new int[]{2,3,5});
+        print(res);
+        check(res, new int[]{4,3,5});
+    }
+    @Test
     void permute(){
         List<List<Integer>> res = solution.permute(new int[]{1,2,3});
         print(res);

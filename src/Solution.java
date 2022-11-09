@@ -770,14 +770,20 @@ public class Solution {
 
     // No. 236
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        int curVal = root.val;
-        int pVal = p.val;
-        int qVal = q.val;
-        if (pVal > curVal && qVal > curVal){
-            return lowestCommonAncestor(root.right, p, q);
-        }else if (pVal < curVal && qVal < curVal){
-            return lowestCommonAncestor(root.left, p, q);
-        }else{
+        if(root == null || root == p || root == q){
+            return root;
+        }
+
+        TreeNode left = lowestCommonAncestor(root.left,p,q);
+        TreeNode right = lowestCommonAncestor(root.right,p,q);
+
+        if(left == null){
+            return right;
+        }
+        else if(right == null){
+            return left;
+        }
+        else{
             return root;
         }
     }
@@ -1041,6 +1047,17 @@ public class Solution {
         return idle_time+tasks.length;
     }
 
+    // No. 665
+    public boolean checkPossibility(int[] nums) {
+        for (int i = 1, err = 0; i < nums.length; i ++){
+            if (nums[i] < nums[i - 1]){
+                if (err ++ > 0 || (i>1 && i<nums.length - 1 && nums[i-2] > nums[i] && nums[i+1] < nums[i-1]))
+                    return false;
+            }
+        }
+        return true;
+    }
+
     // No. 670
     public int maximumSwap(int num) {
         char[] digits = Integer.toString(num).toCharArray();
@@ -1078,6 +1095,51 @@ public class Solution {
             }
         }
         return -1;
+    }
+
+    // No. 729
+    static class MyCalendar {
+        TreeMap<Integer, Integer> calendar = new TreeMap<>();
+        public MyCalendar() {
+            calendar.put(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        }
+
+        public boolean book(int start, int end) {
+            Map.Entry<Integer, Integer> pair = calendar.higherEntry(start);
+            boolean res = end <= pair.getValue();
+            if (res) calendar.put(end, start);
+            return res;
+        }
+    }
+
+    // No. 731
+    static class MyCalendarTwo {
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+
+        public MyCalendarTwo() {
+            map = new TreeMap<>();
+        }
+
+        public boolean book(int start, int end) {
+            map.put(start, map.getOrDefault(start, 0) + 1);
+            map.put(end, map.getOrDefault(end, 0) - 1);
+            int count = 0;
+            for (Map.Entry<Integer, Integer> entry: map.entrySet()){
+                count += entry.getValue();
+                if (count > 2){
+                    map.put(start, map.get(start) - 1);
+                    if (map.get(start) == 0){
+                        map.remove(start);
+                    }
+                    map.put(end, map.get(end) +1);
+                    if (map.get(end) == 0){
+                        map.remove(end);
+                    }
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     // No. 773
@@ -1291,6 +1353,45 @@ public class Solution {
             }
         }
         return dp[text1.length()][text2.length()];
+    }
+
+    // No. 1514
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+        Map<Integer, List<int[]>> g = new HashMap<>();
+        for (int i = 0; i < edges.length; ++i) {
+            int a = edges[i][0], b = edges[i][1];
+            g.computeIfAbsent(a, l -> new ArrayList<>()).add(new int[]{b, i});
+            g.computeIfAbsent(b, l -> new ArrayList<>()).add(new int[]{a, i});
+        }
+        double[] p = new double[n];
+        p[start] = 1d;
+        Queue<Integer> q = new LinkedList<>(Arrays.asList(start));
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            for (int[] a : g.getOrDefault(cur, Collections.emptyList())) {
+                int neighbor = a[0], index = a[1];
+                if (p[cur] * succProb[index] > p[neighbor]) {
+                    p[neighbor] = p[cur] * succProb[index];
+                    q.offer(neighbor);
+                }
+            }
+        }
+        return p[end];
+    }
+
+    // No. 1685
+    public int[] getSumAbsoluteDifferences(int[] nums) {
+        int[] res = new int[nums.length];
+        int[] preSum = new int[nums.length + 1];
+        preSum[0] = 0;
+        for (int i = 0; i < nums.length; i++){
+            preSum[i+1] = preSum[i] + nums[i];
+        }
+        for (int i = 0; i < nums.length; i++){
+            res[i] = i * nums[i] - preSum[i] + (preSum[nums.length] - preSum[i] - (nums.length-i) * nums[i]);
+        }
+
+        return res;
     }
 
     // No. 2031
